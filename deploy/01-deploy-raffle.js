@@ -6,11 +6,11 @@ const VRF_SUB_AMOUNT = 2
 module.exports = async function ( {getNamedAccounts, deployments}) {
     const {deploy, log} = deployments;
     const {deployer} = await getNamedAccounts();
-
     const chaindId = network.config.chainId;
-    let VRFCoordinatorAddress, subscriptionID
+    
+    let VRFCoordinatorAddress, subscriptionID,VRFCoordinatorV2Mock
     if(developmentChains.includes(network.name)) {
-        const VRFCoordinatorV2Mock = await ethers.getContract("VRFCoordinatorV2Mock")
+        VRFCoordinatorV2Mock = await ethers.getContract("VRFCoordinatorV2Mock")
         VRFCoordinatorAddress = VRFCoordinatorV2Mock.address
         const txResponse = await VRFCoordinatorV2Mock.createSubscription()
         const txReceipt = await txResponse.wait(1)
@@ -32,7 +32,10 @@ module.exports = async function ( {getNamedAccounts, deployments}) {
         log: true,
         waitConfirmations: network.config.blockConfirmations || 1
     })
-
+    if(developmentChains.includes(network.name)) {
+        await VRFCoordinatorV2Mock.addConsumer(subscriptionID, raffle.address)
+        log('Consumer is added')
+    }
     if(!developmentChains.includes(network.name)){
         log("Verifying ...")
         await verify(raffle.address, args)
