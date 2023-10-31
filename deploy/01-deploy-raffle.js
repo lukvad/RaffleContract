@@ -1,7 +1,7 @@
 const { network } = require("hardhat");
 const {verify} = require("../utils/verify.js")
 const { developmentChains, networkConfig } = require("../helper-hardhat-config");
-const VRF_SUB_AMOUNT = 2
+const VRF_SUB_AMOUNT = ethers.utils.parseEther("1") 
 
 module.exports = async function ( {getNamedAccounts, deployments}) {
     const {deploy, log} = deployments;
@@ -13,7 +13,7 @@ module.exports = async function ( {getNamedAccounts, deployments}) {
         VRFCoordinatorV2Mock = await ethers.getContract("VRFCoordinatorV2Mock")
         VRFCoordinatorAddress = VRFCoordinatorV2Mock.address
         const txResponse = await VRFCoordinatorV2Mock.createSubscription()
-        const txReceipt = await txResponse.wait(1)
+        const txReceipt = await txResponse.wait()
         subscriptionID = txReceipt.events[0].args.subId; 
         await VRFCoordinatorV2Mock.fundSubscription(subscriptionID, VRF_SUB_AMOUNT)
     }else {
