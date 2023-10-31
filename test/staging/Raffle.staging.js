@@ -31,12 +31,16 @@ developmentChains.includes(network.name)
                             assert.equal(raffleState, 0)
                             assert.equal(winnerStartingBalance.toString(), winnerEndingBalance.add(raffleEntranceFee).toString())
                             assert(endingTimeStamp>startingTimestamp)
+                            resolve()
                         }catch(e){
                             console.log(e);
                             reject(e)
                         }
                     })
-                    await raffle.enterRaffle({ value: raffleEntranceFee})
+                    console.log("Entering raffle...")
+                    const tx = await raffle.enterRaffle({ value: raffleEntranceFee })
+                    await tx.wait(1)
+                    console.log("Ok, time to wait...")
                     const winnerStartingBalance = await accounts[0].getBalance()
                 })
             })

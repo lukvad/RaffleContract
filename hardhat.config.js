@@ -26,6 +26,7 @@ module.exports = {
         compilers: [{ version: "0.8.8" }, { version: "0.8.19" }],
     },
     defaultNetwork: "hardhat",
+
     networks: {
         local: {
             url: LOC_RPC_URL,
@@ -49,6 +50,16 @@ module.exports = {
             sepolia: ETHSCAN_API_KEY,
             polygon: POLSCAN_API_KEY,
         },
+        customChains: [
+            {
+                network: "sepolia",
+                chainId: 11155111,
+                urls: {
+                    apiURL: "https://api-sepolia.etherscan.io/api",
+                    browserURL: "https://sepolia.etherscan.io",
+                },
+            },
+        ],
     },
     gasReporter: {
         enabled: true,
